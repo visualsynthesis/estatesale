@@ -15,22 +15,22 @@
     --text-dim: #8b8fa3;
     --accent: #6c8cff;
     --accent-hover: #8aa4ff;
-    --accent-bg: rgba(108,140,255,0.1);
+    --accent-bg: rgba(108,140,255,0.08);
     --green: #4ade80;
     --orange: #fb923c;
     --red: #f87171;
     --yellow: #facc15;
+    --purple: #c084fc;
     --radius: 10px;
     --shadow: 0 2px 12px rgba(0,0,0,0.3);
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.5;
+    min-height: 100vh;
   }
 
   /* ── Header ── */
@@ -44,23 +44,8 @@
     flex-wrap: wrap;
     gap: 12px;
   }
-  .header h1 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .header h1 span.icon { font-size: 1.6rem; }
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .updated-text {
-    color: var(--text-dim);
-    font-size: 0.8rem;
-  }
+  .header h1 { font-size: 1.4rem; font-weight: 700; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
   .btn {
     padding: 8px 16px;
     border-radius: var(--radius);
@@ -70,143 +55,166 @@
     cursor: pointer;
     font-size: 0.85rem;
     transition: all 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
   .btn:hover { background: var(--border); }
-  .btn-accent {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
+  .btn-accent { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn-accent:hover { background: var(--accent-hover); }
 
-  /* ── Search & Filters Bar ── */
-  .controls {
-    padding: 16px 24px;
+  /* ── Tab Navigation ── */
+  .nav-tabs {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav-tab {
+    padding: 14px 24px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+  }
+  .nav-tab .tab-count {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 0.7rem;
+    margin-left: 6px;
+  }
+  .nav-tab.active .tab-count {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* ── Tab Content ── */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ══════════════════════════
+     BROWSE TAB — Source Cards
+     ══════════════════════════ */
+  .browse-section { padding: 24px; }
+  .browse-intro {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    max-width: 700px;
+  }
+  .source-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .source-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .source-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+  .source-card-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .source-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .source-card .source-desc {
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    margin-bottom: 14px;
+  }
+  .source-card .source-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+  .source-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
+    gap: 8px;
+    margin-top: 14px;
   }
-  .search-box {
-    flex: 1;
-    min-width: 200px;
-    position: relative;
-  }
-  .search-box input {
-    width: 100%;
-    padding: 10px 14px 10px 38px;
+  .source-link {
+    padding: 8px 16px;
     border-radius: var(--radius);
     border: 1px solid var(--border);
     background: var(--surface2);
     color: var(--text);
-    font-size: 0.9rem;
-    outline: none;
-  }
-  .search-box input:focus { border-color: var(--accent); }
-  .search-box svg {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-dim);
-  }
-  .filter-group {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .filter-chip {
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    color: var(--text-dim);
-    font-size: 0.8rem;
-    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.82rem;
     transition: all 0.15s;
-    user-select: none;
-  }
-  .filter-chip:hover { border-color: var(--accent); color: var(--text); }
-  .filter-chip.active {
-    background: var(--accent-bg);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  /* ── View Toggle + Day Tabs ── */
-  .tabs-bar {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    padding: 12px 24px;
-    gap: 8px;
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    background: var(--bg);
+    gap: 6px;
   }
-  .view-toggle {
-    display: flex;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
-  .view-toggle button {
-    padding: 8px 14px;
-    background: var(--surface);
-    color: var(--text-dim);
-    border: none;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: all 0.15s;
-  }
-  .view-toggle button.active {
+  .source-link:hover { border-color: var(--accent); color: var(--accent); }
+  .source-link.primary {
     background: var(--accent);
-    color: #fff;
-  }
-  .day-tab {
-    padding: 8px 18px;
-    border-radius: var(--radius);
-    background: transparent;
-    border: 1px solid transparent;
-    color: var(--text-dim);
-    cursor: pointer;
-    font-size: 0.85rem;
-    white-space: nowrap;
-    transition: all 0.15s;
-    flex-shrink: 0;
-  }
-  .day-tab:hover { color: var(--text); border-color: var(--border); }
-  .day-tab.active {
-    background: var(--accent-bg);
     border-color: var(--accent);
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .day-tab .count {
-    display: inline-block;
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 1px 7px;
-    font-size: 0.7rem;
-    margin-left: 4px;
-  }
-  .day-tab.active .count {
-    background: var(--accent);
     color: #fff;
   }
+  .source-link.primary:hover { background: var(--accent-hover); }
 
-  /* ── Main Content ── */
-  .main {
+  /* Quick city links */
+  .city-links {
+    margin-top: 10px;
     display: flex;
-    height: calc(100vh - 200px);
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .city-link {
+    padding: 3px 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.72rem;
+    transition: all 0.15s;
+  }
+  .city-link:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ══════════════════════════
+     MY SALES TAB
+     ══════════════════════════ */
+  .my-sales-section {
+    display: flex;
+    height: calc(100vh - 110px);
     min-height: 500px;
   }
-
-  /* ── Card List ── */
-  .card-list {
+  .my-sales-list {
     flex: 1;
     overflow-y: auto;
     padding: 16px 24px;
@@ -214,22 +222,59 @@
     flex-direction: column;
     gap: 12px;
   }
-  .card-list::-webkit-scrollbar { width: 6px; }
-  .card-list::-webkit-scrollbar-track { background: transparent; }
-  .card-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .my-sales-list::-webkit-scrollbar { width: 6px; }
+  .my-sales-list::-webkit-scrollbar-track { background: transparent; }
+  .my-sales-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-  .sale-card {
+  /* Add sale form */
+  .add-sale-bar {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 16px;
+    margin-bottom: 8px;
+  }
+  .add-sale-bar h3 {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .form-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .form-input {
+    flex: 1;
+    min-width: 140px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 0.85rem;
+    outline: none;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .form-input::placeholder { color: var(--text-dim); }
+  select.form-input { cursor: pointer; }
+  textarea.form-input { resize: vertical; min-height: 60px; }
+
+  /* Sale cards */
+  .sale-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
     cursor: pointer;
     transition: all 0.15s;
   }
   .sale-card:hover {
     border-color: var(--accent);
     box-shadow: var(--shadow);
-    transform: translateY(-1px);
   }
   .sale-card.highlighted {
     border-color: var(--accent);
@@ -240,43 +285,12 @@
     justify-content: space-between;
     align-items: flex-start;
     gap: 12px;
-    margin-bottom: 8px;
-  }
-  .card-title {
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--text);
-  }
-  .source-badge {
-    font-size: 0.65rem;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .source-badge.estatesales-net { background: #2563eb22; color: #60a5fa; border: 1px solid #2563eb44; }
-  .source-badge.estatesales-org { background: #16a34a22; color: #4ade80; border: 1px solid #16a34a44; }
-  .source-badge.estatesale-com { background: #9333ea22; color: #c084fc; border: 1px solid #9333ea44; }
-  .source-badge.gsalr { background: #ea580c22; color: #fb923c; border: 1px solid #ea580c44; }
-  .source-badge.craigslist { background: #7c3aed22; color: #a78bfa; border: 1px solid #7c3aed44; }
-  .card-company {
-    color: var(--text-dim);
-    font-size: 0.8rem;
-    margin-bottom: 8px;
-  }
-  .card-address {
-    font-size: 0.85rem;
     margin-bottom: 6px;
   }
+  .card-title { font-weight: 600; font-size: 0.95rem; }
+  .card-address { font-size: 0.85rem; margin-bottom: 4px; }
   .card-address strong { color: var(--text); }
-  .card-dates {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
+  .card-dates { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
   .date-pill {
     font-size: 0.75rem;
     padding: 4px 10px;
@@ -284,57 +298,49 @@
     background: var(--surface2);
     border: 1px solid var(--border);
   }
-  .date-pill.today { background: #16a34a22; border-color: #16a34a66; color: var(--green); }
-  .date-pill.tomorrow { background: #2563eb22; border-color: #2563eb66; color: #60a5fa; }
-  .card-categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: 10px;
-  }
-  .cat-tag {
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border-radius: 10px;
-    background: var(--surface2);
-    color: var(--text-dim);
-  }
-  .card-desc {
+  .card-notes {
     font-size: 0.82rem;
     color: var(--text-dim);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
-  .card-footer {
+  .card-actions {
     display: flex;
-    justify-content: space-between;
+    gap: 8px;
     align-items: center;
   }
-  .card-photos {
-    font-size: 0.75rem;
+  .card-action-btn {
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
     color: var(--text-dim);
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.15s;
   }
-  .card-link {
-    font-size: 0.8rem;
-    color: var(--accent);
-    text-decoration: none;
-  }
-  .card-link:hover { text-decoration: underline; }
+  .card-action-btn:hover { border-color: var(--accent); color: var(--text); }
+  .card-action-btn.delete:hover { border-color: var(--red); color: var(--red); }
 
-  /* ── Map Panel ── */
+  .day-chip {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  .day-chip.thu { background: #facc1522; color: var(--yellow); border: 1px solid #facc1544; }
+  .day-chip.fri { background: #fb923c22; color: var(--orange); border: 1px solid #fb923c44; }
+  .day-chip.sat { background: #6c8cff22; color: var(--accent); border: 1px solid #6c8cff44; }
+  .day-chip.sun { background: #4ade8022; color: var(--green); border: 1px solid #4ade8044; }
+
+  /* Map */
   .map-panel {
     width: 50%;
     min-width: 300px;
     border-left: 1px solid var(--border);
     position: relative;
   }
-  #map {
-    width: 100%;
-    height: 100%;
-  }
+  #map { width: 100%; height: 100%; }
   .leaflet-popup-content-wrapper {
     background: var(--surface) !important;
     color: var(--text) !important;
@@ -346,91 +352,43 @@
   .leaflet-popup-content { font-size: 0.85rem; line-height: 1.4; }
   .leaflet-popup-content a { color: var(--accent); }
 
-  /* ── No Results ── */
-  .no-results {
+  .empty-state {
     text-align: center;
     padding: 60px 24px;
     color: var(--text-dim);
   }
-  .no-results h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 8px; }
-
-  /* ── Source filter dropdown ── */
-  .source-filter {
-    position: relative;
-  }
-  .source-dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 6px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 8px;
-    z-index: 100;
-    min-width: 180px;
-    box-shadow: var(--shadow);
-  }
-  .source-dropdown.open { display: block; }
-  .source-dropdown label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 8px;
-    cursor: pointer;
-    font-size: 0.82rem;
-    border-radius: 6px;
-  }
-  .source-dropdown label:hover { background: var(--surface2); }
-
-  /* ── Full map view ── */
-  .main.map-only .card-list { display: none; }
-  .main.map-only .map-panel { width: 100%; border-left: none; }
-  .main.list-only .map-panel { display: none; }
-  .main.list-only .card-list { max-width: 900px; margin: 0 auto; }
+  .empty-state h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 8px; }
+  .empty-state p { max-width: 400px; margin: 0 auto; }
 
   /* ── Mobile ── */
   @media (max-width: 768px) {
     .header { padding: 12px 16px; }
     .header h1 { font-size: 1.1rem; }
-    .controls { padding: 12px 16px; }
-    .tabs-bar { padding: 10px 16px; }
-    .card-list { padding: 12px 16px; }
-    .main { flex-direction: column; height: auto; min-height: auto; }
+    .nav-tabs { padding: 0 16px; }
+    .nav-tab { padding: 12px 16px; font-size: 0.82rem; }
+    .browse-section { padding: 16px; }
+    .source-grid { grid-template-columns: 1fr; }
+    .my-sales-section { flex-direction: column; height: auto; min-height: auto; }
+    .my-sales-list { padding: 12px 16px; }
     .map-panel { width: 100%; height: 350px; border-left: none; border-top: 1px solid var(--border); }
-    .main.list-only .map-panel { display: none; }
-    .main.map-only .card-list { display: none; }
-    .main.map-only .map-panel { height: calc(100vh - 200px); }
   }
 
-  /* ── Print Styles ── */
+  /* ── Print ── */
   @media print {
     body { background: #fff; color: #000; font-size: 11pt; }
-    .header, .controls, .tabs-bar, .map-panel, .btn, .card-link, .card-photos, .source-filter { display: none !important; }
-    .main { display: block !important; height: auto !important; }
-    .card-list { padding: 0; overflow: visible; }
+    .header, .nav-tabs, .map-panel, .add-sale-bar, .card-actions, .btn, .browse-section { display: none !important; }
+    .tab-content.my-sales { display: block !important; }
+    .my-sales-section { display: block !important; height: auto !important; }
+    .my-sales-list { padding: 0; overflow: visible; }
     .sale-card {
-      background: #fff;
-      border: 1px solid #ccc;
-      break-inside: avoid;
-      page-break-inside: avoid;
-      padding: 10px;
-      margin-bottom: 8px;
-      box-shadow: none;
+      background: #fff; border: 1px solid #ccc;
+      break-inside: avoid; page-break-inside: avoid;
+      padding: 10px; margin-bottom: 8px; box-shadow: none;
     }
     .sale-card:hover { transform: none; box-shadow: none; }
-    .source-badge { border: 1px solid #999; background: #eee; color: #333; }
-    .cat-tag { border: 1px solid #ccc; background: #f5f5f5; color: #333; }
     .date-pill { border: 1px solid #ccc; background: #f5f5f5; color: #000; }
-    .card-desc { -webkit-line-clamp: unset; }
-    .print-header {
-      display: block !important;
-      text-align: center;
-      padding: 16px 0;
-      border-bottom: 2px solid #000;
-      margin-bottom: 16px;
-    }
+    .day-chip { border: 1px solid #999; background: #eee; color: #333; }
+    .print-header { display: block !important; text-align: center; padding: 16px 0; border-bottom: 2px solid #000; margin-bottom: 16px; }
     .print-header h1 { font-size: 18pt; }
     .print-header p { font-size: 10pt; color: #666; }
   }
@@ -440,45 +398,187 @@
 <body>
 
 <div class="print-header">
-  <h1>ATL Estate Sales Finder</h1>
+  <h1>ATL Estate Sales — My List</h1>
   <p id="print-subtitle"></p>
 </div>
 
 <header class="header">
-  <h1><span class="icon">&#x1f3e0;</span> ATL Estate Sales</h1>
+  <h1>&#x1f3e0; ATL Estate Sales</h1>
   <div class="header-right">
-    <span class="updated-text" id="lastUpdated"></span>
-    <button class="btn" onclick="window.print()">&#x1f5a8; Print</button>
+    <button class="btn" onclick="window.print()">&#x1f5a8; Print My List</button>
   </div>
 </header>
 
-<div class="controls">
-  <div class="search-box">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-    </svg>
-    <input type="text" id="searchInput" placeholder="Search sales, items, locations..." />
-  </div>
-  <div class="filter-group" id="categoryFilters"></div>
-  <div class="source-filter">
-    <button class="btn" id="sourceBtn">Sources &#x25BE;</button>
-    <div class="source-dropdown" id="sourceDropdown"></div>
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="switchTab('browse')">Browse Sources</button>
+  <button class="nav-tab" onclick="switchTab('my-sales')">My Sales <span class="tab-count" id="myCount">0</span></button>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     BROWSE SOURCES TAB
+     ══════════════════════════════════════════ -->
+<div class="tab-content browse active" id="tab-browse">
+  <div class="browse-section">
+    <p class="browse-intro">Browse estate sales across Greater Atlanta from all the major listing sites. Click a source to search, then save the ones you want to hit to "My Sales" for route planning and printing.</p>
+
+    <div class="source-grid">
+
+      <!-- EstateSales.NET -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#2563eb,#60a5fa)"></div>
+        <h3><span style="color:#60a5fa">&#x25CF;</span> EstateSales.NET</h3>
+        <p class="source-desc">The largest estate sale listing platform. Over 9,000 estate sale companies nationwide. Best for photo-heavy listings with detailed descriptions.</p>
+        <span class="source-tag" style="background:#2563eb22;color:#60a5fa;border:1px solid #2563eb44">Most listings</span>
+        <span class="source-tag" style="background:#2563eb22;color:#60a5fa;border:1px solid #2563eb44">Photos</span>
+        <span class="source-tag" style="background:#2563eb22;color:#60a5fa;border:1px solid #2563eb44">Map view</span>
+        <div class="source-links">
+          <a href="https://www.estatesales.net/GA/Atlanta" target="_blank" rel="noopener" class="source-link primary">Search Atlanta &#x2197;</a>
+          <a href="https://www.estatesales.net/GA" target="_blank" rel="noopener" class="source-link">All Georgia &#x2197;</a>
+        </div>
+        <div class="city-links">
+          <a href="https://www.estatesales.net/GA/Marietta" target="_blank" rel="noopener" class="city-link">Marietta</a>
+          <a href="https://www.estatesales.net/GA/Decatur" target="_blank" rel="noopener" class="city-link">Decatur</a>
+          <a href="https://www.estatesales.net/GA/Roswell" target="_blank" rel="noopener" class="city-link">Roswell</a>
+          <a href="https://www.estatesales.net/GA/Alpharetta" target="_blank" rel="noopener" class="city-link">Alpharetta</a>
+          <a href="https://www.estatesales.net/GA/Sandy-Springs" target="_blank" rel="noopener" class="city-link">Sandy Springs</a>
+          <a href="https://www.estatesales.net/GA/Kennesaw" target="_blank" rel="noopener" class="city-link">Kennesaw</a>
+          <a href="https://www.estatesales.net/GA/Smyrna" target="_blank" rel="noopener" class="city-link">Smyrna</a>
+          <a href="https://www.estatesales.net/GA/Dunwoody" target="_blank" rel="noopener" class="city-link">Dunwoody</a>
+          <a href="https://www.estatesales.net/GA/Tucker" target="_blank" rel="noopener" class="city-link">Tucker</a>
+          <a href="https://www.estatesales.net/GA/Lawrenceville" target="_blank" rel="noopener" class="city-link">Lawrenceville</a>
+          <a href="https://www.estatesales.net/GA/Woodstock" target="_blank" rel="noopener" class="city-link">Woodstock</a>
+          <a href="https://www.estatesales.net/GA/Canton" target="_blank" rel="noopener" class="city-link">Canton</a>
+        </div>
+      </div>
+
+      <!-- EstateSales.org -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#16a34a,#4ade80)"></div>
+        <h3><span style="color:#4ade80">&#x25CF;</span> EstateSales.org</h3>
+        <p class="source-desc">Major estate sale marketplace with online bidding options. Good for finding both in-person sales and online auctions in the Atlanta area.</p>
+        <span class="source-tag" style="background:#16a34a22;color:#4ade80;border:1px solid #16a34a44">Online auctions</span>
+        <span class="source-tag" style="background:#16a34a22;color:#4ade80;border:1px solid #16a34a44">In-person</span>
+        <div class="source-links">
+          <a href="https://estatesales.org/estate-sales/GA/Atlanta" target="_blank" rel="noopener" class="source-link primary">Search Atlanta &#x2197;</a>
+          <a href="https://estatesales.org/estate-sales/GA" target="_blank" rel="noopener" class="source-link">All Georgia &#x2197;</a>
+        </div>
+        <div class="city-links">
+          <a href="https://estatesales.org/estate-sales/GA/Marietta" target="_blank" rel="noopener" class="city-link">Marietta</a>
+          <a href="https://estatesales.org/estate-sales/GA/Decatur" target="_blank" rel="noopener" class="city-link">Decatur</a>
+          <a href="https://estatesales.org/estate-sales/GA/Roswell" target="_blank" rel="noopener" class="city-link">Roswell</a>
+          <a href="https://estatesales.org/estate-sales/GA/Alpharetta" target="_blank" rel="noopener" class="city-link">Alpharetta</a>
+          <a href="https://estatesales.org/estate-sales/GA/Kennesaw" target="_blank" rel="noopener" class="city-link">Kennesaw</a>
+        </div>
+      </div>
+
+      <!-- EstateSale.com -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#9333ea,#c084fc)"></div>
+        <h3><span style="color:#c084fc">&#x25CF;</span> EstateSale.com</h3>
+        <p class="source-desc">Estate sales and auctions platform. Covers both in-person estate sales and online auction events across metro Atlanta.</p>
+        <span class="source-tag" style="background:#9333ea22;color:#c084fc;border:1px solid #9333ea44">Auctions</span>
+        <span class="source-tag" style="background:#9333ea22;color:#c084fc;border:1px solid #9333ea44">Estate sales</span>
+        <div class="source-links">
+          <a href="https://www.estatesale.com/sales/GA/Atlanta/" target="_blank" rel="noopener" class="source-link primary">Search Atlanta &#x2197;</a>
+        </div>
+        <div class="city-links">
+          <a href="https://www.estatesale.com/sales/GA/Marietta/" target="_blank" rel="noopener" class="city-link">Marietta</a>
+          <a href="https://www.estatesale.com/sales/GA/Roswell/" target="_blank" rel="noopener" class="city-link">Roswell</a>
+          <a href="https://www.estatesale.com/sales/GA/Decatur/" target="_blank" rel="noopener" class="city-link">Decatur</a>
+          <a href="https://www.estatesale.com/sales/GA/Alpharetta/" target="_blank" rel="noopener" class="city-link">Alpharetta</a>
+        </div>
+      </div>
+
+      <!-- gsalr.com -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#ea580c,#fb923c)"></div>
+        <h3><span style="color:#fb923c">&#x25CF;</span> gsalr.com</h3>
+        <p class="source-desc">Garage sales, yard sales, and estate sales by map. Great map interface for seeing what's near you. Includes moving sales and community sales.</p>
+        <span class="source-tag" style="background:#ea580c22;color:#fb923c;border:1px solid #ea580c44">Map view</span>
+        <span class="source-tag" style="background:#ea580c22;color:#fb923c;border:1px solid #ea580c44">Garage sales too</span>
+        <div class="source-links">
+          <a href="https://gsalr.com/garage-sales-atlanta-ga.html" target="_blank" rel="noopener" class="source-link primary">Atlanta Map &#x2197;</a>
+        </div>
+        <div class="city-links">
+          <a href="https://gsalr.com/garage-sales-marietta-ga.html" target="_blank" rel="noopener" class="city-link">Marietta</a>
+          <a href="https://gsalr.com/garage-sales-roswell-ga.html" target="_blank" rel="noopener" class="city-link">Roswell</a>
+          <a href="https://gsalr.com/garage-sales-decatur-ga.html" target="_blank" rel="noopener" class="city-link">Decatur</a>
+          <a href="https://gsalr.com/garage-sales-alpharetta-ga.html" target="_blank" rel="noopener" class="city-link">Alpharetta</a>
+          <a href="https://gsalr.com/garage-sales-smyrna-ga.html" target="_blank" rel="noopener" class="city-link">Smyrna</a>
+          <a href="https://gsalr.com/garage-sales-kennesaw-ga.html" target="_blank" rel="noopener" class="city-link">Kennesaw</a>
+          <a href="https://gsalr.com/garage-sales-dunwoody-ga.html" target="_blank" rel="noopener" class="city-link">Dunwoody</a>
+        </div>
+      </div>
+
+      <!-- Craigslist -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div>
+        <h3><span style="color:#a78bfa">&#x25CF;</span> Craigslist Atlanta</h3>
+        <p class="source-desc">Garage and moving sales section. Less curated but sometimes has sales not listed anywhere else. Filter for "estate sale" in search.</p>
+        <span class="source-tag" style="background:#7c3aed22;color:#a78bfa;border:1px solid #7c3aed44">Free listings</span>
+        <span class="source-tag" style="background:#7c3aed22;color:#a78bfa;border:1px solid #7c3aed44">Hidden gems</span>
+        <div class="source-links">
+          <a href="https://atlanta.craigslist.org/search/gms?query=estate+sale" target="_blank" rel="noopener" class="source-link primary">Estate Sales &#x2197;</a>
+          <a href="https://atlanta.craigslist.org/search/gms" target="_blank" rel="noopener" class="source-link">All Garage Sales &#x2197;</a>
+        </div>
+      </div>
+
+      <!-- GarageSaleFinder -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#0891b2,#22d3ee)"></div>
+        <h3><span style="color:#22d3ee">&#x25CF;</span> GarageSaleFinder</h3>
+        <p class="source-desc">Large network of garage and estate sale listings. Claims to be the largest network of sale listing websites. Includes map search.</p>
+        <span class="source-tag" style="background:#0891b222;color:#22d3ee;border:1px solid #0891b244">Large network</span>
+        <div class="source-links">
+          <a href="https://www.garagesalefinder.com/yard-sales/atlanta-ga/" target="_blank" rel="noopener" class="source-link primary">Search Atlanta &#x2197;</a>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
-<div class="tabs-bar">
-  <div class="view-toggle">
-    <button id="viewBoth" class="active" onclick="setView('both')">Split</button>
-    <button id="viewList" onclick="setView('list-only')">List</button>
-    <button id="viewMap" onclick="setView('map-only')">Map</button>
-  </div>
-  <div id="dayTabs" style="display:flex;gap:6px;overflow-x:auto;"></div>
-</div>
+<!-- ══════════════════════════════════════════
+     MY SALES TAB
+     ══════════════════════════════════════════ -->
+<div class="tab-content my-sales" id="tab-my-sales">
+  <div class="my-sales-section">
+    <div class="my-sales-list" id="mySalesList">
 
-<div class="main" id="mainContent">
-  <div class="card-list" id="cardList"></div>
-  <div class="map-panel">
-    <div id="map"></div>
+      <!-- Add Sale Form -->
+      <div class="add-sale-bar">
+        <h3>&#x2795; Save a Sale</h3>
+        <div class="form-row">
+          <input type="text" class="form-input" id="addTitle" placeholder="Sale name (e.g., Buckhead Estate Sale)" />
+        </div>
+        <div class="form-row">
+          <input type="text" class="form-input" id="addAddress" placeholder="Address (e.g., 123 Peachtree St NE)" />
+          <input type="text" class="form-input" id="addCity" placeholder="City" style="max-width:160px" />
+          <input type="text" class="form-input" id="addZip" placeholder="Zip" style="max-width:100px" />
+        </div>
+        <div class="form-row">
+          <select class="form-input" id="addDay" style="max-width:150px">
+            <option value="">Day...</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+            <option>Sunday</option>
+          </select>
+          <input type="text" class="form-input" id="addTime" placeholder="Time (e.g., 9am-3pm)" style="max-width:180px" />
+          <input type="url" class="form-input" id="addUrl" placeholder="Listing URL (optional)" />
+        </div>
+        <div class="form-row">
+          <textarea class="form-input" id="addNotes" placeholder="Notes — what are you interested in? (furniture, tools, etc.)"></textarea>
+        </div>
+        <button class="btn btn-accent" onclick="addSale()">Save to My List</button>
+      </div>
+
+      <div id="savedCards"></div>
+    </div>
+
+    <div class="map-panel">
+      <div id="map"></div>
+    </div>
   </div>
 </div>
 
@@ -488,318 +588,217 @@
   'use strict';
 
   // ── State ──
-  let allSales = [];
-  let filteredSales = [];
-  let activeDay = 'all';
-  let activeCategories = new Set();
-  let activeSources = new Set();
-  let searchQuery = '';
-  let currentView = 'both';
+  let mySales = [];
   let map, markers = [];
 
-  const CATEGORIES = ['furniture','antiques','jewelry','tools','art','collectibles','electronics','kitchenware','clothing','books','outdoor','sports','toys'];
-  const SOURCE_LABELS = {
-    'estatesales.net': 'EstateSales.NET',
-    'estatesales.org': 'EstateSales.org',
-    'estatesale.com': 'EstateSale.com',
-    'gsalr.com': 'gsalr.com',
-    'craigslist': 'Craigslist'
-  };
-  const SOURCE_CLASSES = {
-    'estatesales.net': 'estatesales-net',
-    'estatesales.org': 'estatesales-org',
-    'estatesale.com': 'estatesale-com',
-    'gsalr.com': 'gsalr',
-    'craigslist': 'craigslist'
-  };
-  const DAY_COLORS = {
-    'Thursday': '#facc15',
-    'Friday': '#fb923c',
-    'Saturday': '#6c8cff',
-    'Sunday': '#4ade80'
-  };
+  const DAY_COLORS = { 'Thursday': '#facc15', 'Friday': '#fb923c', 'Saturday': '#6c8cff', 'Sunday': '#4ade80' };
+  const DAY_SHORT = { 'Thursday': 'thu', 'Friday': 'fri', 'Saturday': 'sat', 'Sunday': 'sun' };
 
-  // ── Init ──
-  async function init() {
+  // ── LocalStorage ──
+  function loadSales() {
     try {
-      const resp = await fetch('data/sales.json');
-      const data = await resp.json();
-      allSales = data.sales || [];
-      document.getElementById('lastUpdated').textContent = 'Updated: ' + new Date(data.last_updated).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
-    } catch(e) {
-      allSales = [];
-      document.getElementById('lastUpdated').textContent = 'Could not load data';
-    }
-
-    // Enable all sources by default
-    const sources = [...new Set(allSales.map(s => s.source))];
-    sources.forEach(s => activeSources.add(s));
-
-    initMap();
-    buildCategoryFilters();
-    buildSourceDropdown();
-    buildDayTabs();
-    applyFilters();
-
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      searchQuery = e.target.value.toLowerCase();
-      applyFilters();
-    });
+      mySales = JSON.parse(localStorage.getItem('atl-estate-sales') || '[]');
+    } catch(e) { mySales = []; }
+    updateCount();
   }
+
+  function saveSales() {
+    localStorage.setItem('atl-estate-sales', JSON.stringify(mySales));
+    updateCount();
+  }
+
+  function updateCount() {
+    document.getElementById('myCount').textContent = mySales.length;
+  }
+
+  // ── Tab Switching ──
+  window.switchTab = function(tab) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    event.target.classList.add('active');
+    if (tab === 'my-sales') {
+      setTimeout(() => {
+        if (map) map.invalidateSize();
+        else initMap();
+        renderSavedSales();
+        updateMapMarkers();
+      }, 50);
+    }
+  };
 
   // ── Map ──
   function initMap() {
-    map = L.map('map', { zoomControl: true }).setView([33.88, -84.38], 10);
+    if (map) return;
+    map = L.map('map', { zoomControl: true }).setView([33.83, -84.38], 10);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      attribution: '&copy; OSM &copy; CARTO',
       maxZoom: 19
     }).addTo(map);
   }
 
   function updateMapMarkers() {
+    if (!map) return;
     markers.forEach(m => map.removeLayer(m));
     markers = [];
 
-    filteredSales.forEach(sale => {
+    mySales.forEach(sale => {
       if (!sale.lat || !sale.lng) return;
-      const days = sale.dates.map(d => d.day);
-      const color = DAY_COLORS[days[0]] || '#6c8cff';
-
+      const color = DAY_COLORS[sale.day] || '#6c8cff';
       const icon = L.divIcon({
         className: '',
-        html: `<div style="width:14px;height:14px;background:${color};border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>`,
-        iconSize: [14, 14],
-        iconAnchor: [7, 7]
+        html: `<div style="width:16px;height:16px;background:${color};border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;font-size:8px;color:#000;font-weight:700;">${markers.length + 1}</div>`,
+        iconSize: [16, 16], iconAnchor: [8, 8]
       });
-
       const marker = L.marker([sale.lat, sale.lng], { icon }).addTo(map);
-      const popupHtml = `
-        <div style="max-width:240px">
-          <strong>${esc(sale.title)}</strong><br>
-          <span style="color:#888">${esc(sale.company)}</span><br>
-          <strong>${esc(sale.address)}</strong><br>
-          ${esc(sale.city)}, ${esc(sale.zip)}<br>
-          <div style="margin-top:6px">${sale.dates.map(d => `${d.day} ${d.start}–${d.end}`).join('<br>')}</div>
-          <a href="${esc(sale.url)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px">View listing &rarr;</a>
-        </div>`;
-      marker.bindPopup(popupHtml);
-
+      const popup = `<div style="max-width:220px">
+        <strong>${esc(sale.title)}</strong><br>
+        <strong>${esc(sale.address)}</strong><br>
+        ${esc(sale.city)} ${esc(sale.zip)}<br>
+        ${sale.day ? sale.day + ' ' : ''}${esc(sale.time)}<br>
+        ${sale.notes ? '<em style="color:#8b8fa3">' + esc(sale.notes) + '</em><br>' : ''}
+        ${sale.url ? '<a href="' + esc(sale.url) + '" target="_blank" rel="noopener" style="color:#6c8cff">View listing &rarr;</a>' : ''}
+        <br><a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(sale.address + ', ' + sale.city + ' GA ' + sale.zip)}" target="_blank" rel="noopener" style="color:#4ade80">Get directions &rarr;</a>
+      </div>`;
+      marker.bindPopup(popup);
       marker.on('click', () => {
         document.querySelectorAll('.sale-card').forEach(c => c.classList.remove('highlighted'));
         const card = document.getElementById('card-' + sale.id);
-        if (card) {
-          card.classList.add('highlighted');
-          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        if (card) { card.classList.add('highlighted'); card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
       });
-
       markers.push(marker);
     });
 
     if (markers.length > 0) {
-      const group = new L.featureGroup(markers);
-      map.fitBounds(group.getBounds().pad(0.1));
+      map.fitBounds(new L.featureGroup(markers).getBounds().pad(0.15));
     }
   }
 
-  // ── Build UI ──
-  function buildCategoryFilters() {
-    const container = document.getElementById('categoryFilters');
-    CATEGORIES.forEach(cat => {
-      const chip = document.createElement('button');
-      chip.className = 'filter-chip';
-      chip.textContent = cat;
-      chip.onclick = () => {
-        if (activeCategories.has(cat)) {
-          activeCategories.delete(cat);
-          chip.classList.remove('active');
-        } else {
-          activeCategories.add(cat);
-          chip.classList.add('active');
-        }
-        applyFilters();
-      };
-      container.appendChild(chip);
-    });
-  }
-
-  function buildSourceDropdown() {
-    const dropdown = document.getElementById('sourceDropdown');
-    const sources = [...new Set(allSales.map(s => s.source))];
-
-    sources.forEach(src => {
-      const label = document.createElement('label');
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.checked = true;
-      cb.onchange = () => {
-        if (cb.checked) activeSources.add(src);
-        else activeSources.delete(src);
-        applyFilters();
-      };
-      label.appendChild(cb);
-      label.appendChild(document.createTextNode(' ' + (SOURCE_LABELS[src] || src)));
-      dropdown.appendChild(label);
-    });
-
-    document.getElementById('sourceBtn').onclick = (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle('open');
-    };
-    document.addEventListener('click', () => dropdown.classList.remove('open'));
-    dropdown.addEventListener('click', (e) => e.stopPropagation());
-  }
-
-  function buildDayTabs() {
-    const container = document.getElementById('dayTabs');
-    // Gather all unique days from the data
-    const dayOrder = ['Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday'];
-    const allDays = new Set();
-    allSales.forEach(s => s.dates.forEach(d => allDays.add(d.day)));
-    const orderedDays = dayOrder.filter(d => allDays.has(d));
-
-    // All tab
-    const allTab = createDayTab('All', 'all', allSales.length);
-    container.appendChild(allTab);
-
-    orderedDays.forEach(day => {
-      const count = allSales.filter(s => s.dates.some(d => d.day === day)).length;
-      container.appendChild(createDayTab(day, day, count));
-    });
-
-    // Activate "All"
-    container.querySelector('.day-tab').classList.add('active');
-  }
-
-  function createDayTab(label, value, count) {
-    const tab = document.createElement('button');
-    tab.className = 'day-tab';
-    tab.innerHTML = `${label} <span class="count">${count}</span>`;
-    tab.onclick = () => {
-      document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      activeDay = value;
-      applyFilters();
-    };
-    return tab;
-  }
-
-  // ── Filtering ──
-  function applyFilters() {
-    filteredSales = allSales.filter(sale => {
-      // Day filter
-      if (activeDay !== 'all' && !sale.dates.some(d => d.day === activeDay)) return false;
-      // Source filter
-      if (!activeSources.has(sale.source)) return false;
-      // Category filter (must have ALL selected categories)
-      if (activeCategories.size > 0) {
-        for (const cat of activeCategories) {
-          if (!sale.categories.includes(cat)) return false;
-        }
+  // ── Geocode using Nominatim ──
+  async function geocode(address, city, zip) {
+    const query = `${address}, ${city}, GA ${zip}`;
+    try {
+      const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`, {
+        headers: { 'User-Agent': 'ATLEstateSalesFinder/1.0' }
+      });
+      const results = await resp.json();
+      if (results.length > 0) {
+        return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) };
       }
-      // Search
-      if (searchQuery) {
-        const haystack = [sale.title, sale.company, sale.address, sale.city, sale.zip, sale.description].join(' ').toLowerCase();
-        if (!haystack.includes(searchQuery)) return false;
-      }
-      return true;
-    });
-
-    // Sort: by first date's day order, then by start time
-    const dayOrder = { 'Thursday': 0, 'Friday': 1, 'Saturday': 2, 'Sunday': 3, 'Monday': 4 };
-    filteredSales.sort((a, b) => {
-      const aDay = dayOrder[a.dates[0]?.day] ?? 9;
-      const bDay = dayOrder[b.dates[0]?.day] ?? 9;
-      if (aDay !== bDay) return aDay - bDay;
-      return (a.dates[0]?.start || '').localeCompare(b.dates[0]?.start || '');
-    });
-
-    renderCards();
-    updateMapMarkers();
-    updatePrintSubtitle();
+    } catch(e) { console.log('Geocode failed:', e); }
+    return { lat: null, lng: null };
   }
 
-  // ── Render Cards ──
-  function renderCards() {
-    const container = document.getElementById('cardList');
+  // ── Add Sale ──
+  window.addSale = async function() {
+    const title = document.getElementById('addTitle').value.trim();
+    const address = document.getElementById('addAddress').value.trim();
+    const city = document.getElementById('addCity').value.trim() || 'Atlanta';
+    const zip = document.getElementById('addZip').value.trim();
+    const day = document.getElementById('addDay').value;
+    const time = document.getElementById('addTime').value.trim();
+    const url = document.getElementById('addUrl').value.trim();
+    const notes = document.getElementById('addNotes').value.trim();
 
-    if (filteredSales.length === 0) {
-      container.innerHTML = `<div class="no-results"><h3>No sales found</h3><p>Try adjusting your filters or search terms</p></div>`;
+    if (!title && !address) {
+      alert('Please enter at least a title or address.');
       return;
     }
 
-    let currentDay = '';
+    const sale = {
+      id: Date.now().toString(36),
+      title: title || 'Estate Sale',
+      address, city, zip, day, time, url, notes,
+      lat: null, lng: null,
+      added: new Date().toISOString()
+    };
+
+    // Geocode
+    if (address) {
+      const coords = await geocode(address, city, zip);
+      sale.lat = coords.lat;
+      sale.lng = coords.lng;
+    }
+
+    mySales.unshift(sale);
+    saveSales();
+    renderSavedSales();
+    updateMapMarkers();
+
+    // Clear form
+    ['addTitle','addAddress','addCity','addZip','addTime','addUrl','addNotes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('addDay').selectedIndex = 0;
+  };
+
+  // ── Delete Sale ──
+  window.deleteSale = function(id) {
+    mySales = mySales.filter(s => s.id !== id);
+    saveSales();
+    renderSavedSales();
+    updateMapMarkers();
+  };
+
+  // ── Click Card → Map ──
+  window.focusSale = function(id) {
+    const sale = mySales.find(s => s.id === id);
+    if (!sale || !sale.lat || !sale.lng) return;
+    if (map) {
+      map.setView([sale.lat, sale.lng], 14);
+      const idx = mySales.indexOf(sale);
+      if (markers[idx]) markers[idx].openPopup();
+    }
+  };
+
+  // ── Render Saved Sales ──
+  function renderSavedSales() {
+    const container = document.getElementById('savedCards');
+
+    if (mySales.length === 0) {
+      container.innerHTML = `<div class="empty-state">
+        <h3>No saved sales yet</h3>
+        <p>Browse the sources in the first tab, find sales you want to hit, and save them here with the form above. They'll show up on the map so you can plan your route.</p>
+      </div>`;
+      return;
+    }
+
+    // Group by day
+    const dayOrder = ['Thursday', 'Friday', 'Saturday', 'Sunday', ''];
+    const grouped = {};
+    mySales.forEach(s => {
+      const d = s.day || '';
+      if (!grouped[d]) grouped[d] = [];
+      grouped[d].push(s);
+    });
+
     let html = '';
+    dayOrder.forEach(day => {
+      if (!grouped[day]) return;
+      const label = day || 'No day set';
+      const color = DAY_COLORS[day] || 'var(--text-dim)';
+      html += `<div style="font-weight:700;font-size:0.9rem;color:${color};padding:10px 0 6px;border-bottom:1px solid var(--border);margin-top:4px;">${label}</div>`;
 
-    filteredSales.forEach(sale => {
-      const firstDay = sale.dates[0]?.day || '';
-      if (activeDay === 'all' && firstDay !== currentDay) {
-        currentDay = firstDay;
-        html += `<div style="font-weight:700;font-size:0.9rem;color:${DAY_COLORS[currentDay] || 'var(--text)'};padding:8px 0 4px;border-bottom:1px solid var(--border);margin-top:8px;">${currentDay}</div>`;
-      }
-
-      const sourceClass = SOURCE_CLASSES[sale.source] || '';
-      const sourceLabel = SOURCE_LABELS[sale.source] || sale.source;
-
-      html += `
-        <div class="sale-card" id="card-${sale.id}" onclick="cardClick('${sale.id}')">
-          <div class="card-top">
-            <div class="card-title">${esc(sale.title)}</div>
-            <span class="source-badge ${sourceClass}">${esc(sourceLabel)}</span>
-          </div>
-          ${sale.company ? `<div class="card-company">${esc(sale.company)}</div>` : ''}
-          <div class="card-address"><strong>${esc(sale.address)}</strong> &middot; ${esc(sale.city)}, ${esc(sale.zip)}</div>
-          <div class="card-dates">
-            ${sale.dates.map(d => {
-              let cls = '';
-              const today = new Date().toISOString().slice(0,10);
-              const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0,10);
-              if (d.date === today) cls = 'today';
-              else if (d.date === tomorrow) cls = 'tomorrow';
-              return `<span class="date-pill ${cls}">${d.day} ${d.start}–${d.end}</span>`;
-            }).join('')}
-          </div>
-          <div class="card-categories">${sale.categories.map(c => `<span class="cat-tag">${c}</span>`).join('')}</div>
-          <div class="card-desc">${esc(sale.description)}</div>
-          <div class="card-footer">
-            <span class="card-photos">${sale.photos ? sale.photos + ' photos' : ''}</span>
-            <a class="card-link" href="${esc(sale.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">View listing &rarr;</a>
-          </div>
-        </div>`;
+      grouped[day].forEach((sale, i) => {
+        const dayClass = DAY_SHORT[sale.day] || '';
+        html += `
+          <div class="sale-card" id="card-${sale.id}" onclick="focusSale('${sale.id}')">
+            <div class="card-top">
+              <div class="card-title">${esc(sale.title)}</div>
+              ${sale.day ? `<span class="day-chip ${dayClass}">${sale.day}</span>` : ''}
+            </div>
+            <div class="card-address"><strong>${esc(sale.address)}</strong>${sale.city ? ' &middot; ' + esc(sale.city) : ''}${sale.zip ? ', ' + esc(sale.zip) : ''}</div>
+            ${sale.time ? `<div class="card-dates"><span class="date-pill">${esc(sale.time)}</span></div>` : ''}
+            ${sale.notes ? `<div class="card-notes">${esc(sale.notes)}</div>` : ''}
+            <div class="card-actions">
+              ${sale.url ? `<a href="${esc(sale.url)}" target="_blank" rel="noopener" class="card-action-btn" onclick="event.stopPropagation()">View listing &#x2197;</a>` : ''}
+              <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(sale.address + ', ' + sale.city + ' GA ' + sale.zip)}" target="_blank" rel="noopener" class="card-action-btn" onclick="event.stopPropagation()">Directions &#x2197;</a>
+              <button class="card-action-btn delete" onclick="event.stopPropagation();deleteSale('${sale.id}')">Remove</button>
+            </div>
+          </div>`;
+      });
     });
 
     container.innerHTML = html;
-  }
-
-  // ── View Toggle ──
-  window.setView = function(view) {
-    currentView = view;
-    const main = document.getElementById('mainContent');
-    main.className = 'main ' + (view === 'both' ? '' : view);
-    document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
-    if (view === 'both') document.getElementById('viewBoth').classList.add('active');
-    else if (view === 'list-only') document.getElementById('viewList').classList.add('active');
-    else document.getElementById('viewMap').classList.add('active');
-    setTimeout(() => map.invalidateSize(), 100);
-  };
-
-  // ── Card Click → Map ──
-  window.cardClick = function(id) {
-    const sale = filteredSales.find(s => s.id === id);
-    if (!sale || !sale.lat || !sale.lng) return;
-    map.setView([sale.lat, sale.lng], 14);
-    const marker = markers.find(m => {
-      const ll = m.getLatLng();
-      return Math.abs(ll.lat - sale.lat) < 0.0001 && Math.abs(ll.lng - sale.lng) < 0.0001;
-    });
-    if (marker) marker.openPopup();
-  };
-
-  // ── Print ──
-  function updatePrintSubtitle() {
-    const dayText = activeDay === 'all' ? 'All Days' : activeDay;
-    const count = filteredSales.length;
-    document.getElementById('print-subtitle').textContent = `${dayText} \u2022 ${count} sale${count !== 1 ? 's' : ''} \u2022 Greater Atlanta \u2022 Printed ${new Date().toLocaleDateString()}`;
+    document.getElementById('print-subtitle').textContent = `${mySales.length} sale${mySales.length !== 1 ? 's' : ''} saved \u2022 Greater Atlanta \u2022 Printed ${new Date().toLocaleDateString()}`;
   }
 
   // ── Utils ──
@@ -808,8 +807,8 @@
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ── Go ──
-  init();
+  // ── Init ──
+  loadSales();
 })();
 </script>
 </body>
