@@ -393,6 +393,147 @@
     .print-header p { font-size: 10pt; color: #666; }
   }
   .print-header { display: none; }
+
+  /* ══════════════════════════
+     FEED TAB
+     ══════════════════════════ */
+  .feed-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  .feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .feed-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+  .feed-subtitle { color: var(--text-dim); font-size: 0.82rem; }
+  .feed-controls { display: flex; gap: 8px; }
+  .feed-filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .feed-filter {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .feed-filter:hover { border-color: var(--accent); color: var(--text); }
+  .feed-filter.active {
+    background: var(--accent-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .feed-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .feed-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: all 0.15s;
+  }
+  .feed-item:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+  }
+  .feed-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .feed-item-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .feed-item-title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .feed-item-title a:hover { color: var(--accent); }
+  .feed-item-meta {
+    display: flex;
+    gap: 12px;
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .feed-item-desc {
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .feed-item-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .feed-source-tag {
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .feed-source-tag.craigslist { background: #7c3aed22; color: #a78bfa; border: 1px solid #7c3aed44; }
+  .feed-source-tag.scraped { background: #2563eb22; color: #60a5fa; border: 1px solid #2563eb44; }
+  .feed-loading {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--text-dim);
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .feed-error {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--text-dim);
+  }
+  .feed-error a { color: var(--accent); }
+  .feed-save-btn {
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.15s;
+  }
+  .feed-save-btn:hover { border-color: var(--green); color: var(--green); }
+  .feed-save-btn.saved { border-color: var(--green); color: var(--green); }
 </style>
 </head>
 <body>
@@ -410,14 +551,46 @@
 </header>
 
 <nav class="nav-tabs">
-  <button class="nav-tab active" onclick="switchTab('browse')">Browse Sources</button>
+  <button class="nav-tab active" onclick="switchTab('feed')">Live Feed</button>
+  <button class="nav-tab" onclick="switchTab('browse')">Browse Sources</button>
   <button class="nav-tab" onclick="switchTab('my-sales')">My Sales <span class="tab-count" id="myCount">0</span></button>
 </nav>
 
 <!-- ══════════════════════════════════════════
+     LIVE FEED TAB
+     ══════════════════════════════════════════ -->
+<div class="tab-content active" id="tab-feed">
+  <div class="feed-section">
+    <div class="feed-header">
+      <div>
+        <h2 class="feed-title">Estate Sales This Week</h2>
+        <p class="feed-subtitle">Live listings from Craigslist Atlanta &amp; more. Updates every time you load the page.</p>
+      </div>
+      <div class="feed-controls">
+        <button class="btn" onclick="refreshFeed()" id="refreshBtn">&#x21BB; Refresh</button>
+      </div>
+    </div>
+    <div class="feed-filters">
+      <button class="feed-filter active" onclick="setFeedFilter('all', this)">All</button>
+      <button class="feed-filter" onclick="setFeedFilter('estate sale', this)">Estate Sales</button>
+      <button class="feed-filter" onclick="setFeedFilter('moving', this)">Moving Sales</button>
+      <button class="feed-filter" onclick="setFeedFilter('antique', this)">Antiques</button>
+      <button class="feed-filter" onclick="setFeedFilter('furniture', this)">Furniture</button>
+      <button class="feed-filter" onclick="setFeedFilter('downsizing', this)">Downsizing</button>
+    </div>
+    <div id="feedList" class="feed-list">
+      <div class="feed-loading" id="feedLoading">
+        <div class="spinner"></div>
+        <p>Loading live listings...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
      BROWSE SOURCES TAB
      ══════════════════════════════════════════ -->
-<div class="tab-content browse active" id="tab-browse">
+<div class="tab-content browse" id="tab-browse">
   <div class="browse-section">
     <p class="browse-intro">Browse estate sales across Greater Atlanta from all the major listing sites. Click a source to search, then save the ones you want to hit to "My Sales" for route planning and printing.</p>
 
@@ -459,33 +632,46 @@
         <span class="source-tag" style="background:#16a34a22;color:#4ade80;border:1px solid #16a34a44">Online auctions</span>
         <span class="source-tag" style="background:#16a34a22;color:#4ade80;border:1px solid #16a34a44">In-person</span>
         <div class="source-links">
-          <a href="https://estatesales.org/estate-sales/GA/Atlanta" target="_blank" rel="noopener" class="source-link primary">Search Atlanta &#x2197;</a>
-          <a href="https://estatesales.org/estate-sales/GA" target="_blank" rel="noopener" class="source-link">All Georgia &#x2197;</a>
+          <a href="https://estatesales.org/estate-sales/ga/atlanta" target="_blank" rel="noopener" class="source-link primary">Search Atlanta &#x2197;</a>
+          <a href="https://estatesales.org/estate-sales/ga" target="_blank" rel="noopener" class="source-link">All Georgia &#x2197;</a>
+          <a href="https://estatesales.org/online-auctions?loc=atlanta-ga" target="_blank" rel="noopener" class="source-link">Online Auctions &#x2197;</a>
         </div>
         <div class="city-links">
-          <a href="https://estatesales.org/estate-sales/GA/Marietta" target="_blank" rel="noopener" class="city-link">Marietta</a>
-          <a href="https://estatesales.org/estate-sales/GA/Decatur" target="_blank" rel="noopener" class="city-link">Decatur</a>
-          <a href="https://estatesales.org/estate-sales/GA/Roswell" target="_blank" rel="noopener" class="city-link">Roswell</a>
-          <a href="https://estatesales.org/estate-sales/GA/Alpharetta" target="_blank" rel="noopener" class="city-link">Alpharetta</a>
-          <a href="https://estatesales.org/estate-sales/GA/Kennesaw" target="_blank" rel="noopener" class="city-link">Kennesaw</a>
+          <a href="https://estatesales.org/estate-sales/ga/marietta" target="_blank" rel="noopener" class="city-link">Marietta</a>
+          <a href="https://estatesales.org/estate-sales/ga/decatur" target="_blank" rel="noopener" class="city-link">Decatur</a>
+          <a href="https://estatesales.org/estate-sales/ga/roswell" target="_blank" rel="noopener" class="city-link">Roswell</a>
+          <a href="https://estatesales.org/estate-sales/ga/alpharetta" target="_blank" rel="noopener" class="city-link">Alpharetta</a>
+          <a href="https://estatesales.org/estate-sales/ga/kennesaw" target="_blank" rel="noopener" class="city-link">Kennesaw</a>
         </div>
       </div>
 
-      <!-- EstateSale.com -->
+      <!-- HiBid -->
       <div class="source-card">
         <div class="source-card-accent" style="background:linear-gradient(90deg,#9333ea,#c084fc)"></div>
-        <h3><span style="color:#c084fc">&#x25CF;</span> EstateSale.com</h3>
-        <p class="source-desc">Estate sales and auctions platform. Covers both in-person estate sales and online auction events across metro Atlanta.</p>
-        <span class="source-tag" style="background:#9333ea22;color:#c084fc;border:1px solid #9333ea44">Auctions</span>
-        <span class="source-tag" style="background:#9333ea22;color:#c084fc;border:1px solid #9333ea44">Estate sales</span>
+        <h3><span style="color:#c084fc">&#x25CF;</span> HiBid</h3>
+        <p class="source-desc">Online auction platform with live and timed bidding. Great for estate auctions where you can bid online. Preview items before bidding.</p>
+        <span class="source-tag" style="background:#9333ea22;color:#c084fc;border:1px solid #9333ea44">Online bidding</span>
+        <span class="source-tag" style="background:#9333ea22;color:#c084fc;border:1px solid #9333ea44">Live auctions</span>
+        <span class="source-tag" style="background:#9333ea22;color:#c084fc;border:1px solid #9333ea44">Preview available</span>
         <div class="source-links">
-          <a href="https://www.estatesale.com/sales/GA/Atlanta/" target="_blank" rel="noopener" class="source-link primary">Search Atlanta &#x2197;</a>
+          <a href="https://atlanta.hibid.com/auctions" target="_blank" rel="noopener" class="source-link primary">Atlanta Auctions &#x2197;</a>
+          <a href="https://georgia.hibid.com/auctions" target="_blank" rel="noopener" class="source-link">All Georgia &#x2197;</a>
         </div>
         <div class="city-links">
-          <a href="https://www.estatesale.com/sales/GA/Marietta/" target="_blank" rel="noopener" class="city-link">Marietta</a>
-          <a href="https://www.estatesale.com/sales/GA/Roswell/" target="_blank" rel="noopener" class="city-link">Roswell</a>
-          <a href="https://www.estatesale.com/sales/GA/Decatur/" target="_blank" rel="noopener" class="city-link">Decatur</a>
-          <a href="https://www.estatesale.com/sales/GA/Alpharetta/" target="_blank" rel="noopener" class="city-link">Alpharetta</a>
+          <a href="https://hibid.com/georgia/auctions/700001/antiques-and-collectibles" target="_blank" rel="noopener" class="city-link">Antiques</a>
+          <a href="https://georgia.hibid.com/auctions/40237/furniture" target="_blank" rel="noopener" class="city-link">Furniture</a>
+        </div>
+      </div>
+
+      <!-- AuctionZip -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#b45309,#f59e0b)"></div>
+        <h3><span style="color:#f59e0b">&#x25CF;</span> AuctionZip</h3>
+        <p class="source-desc">Find local auctioneers and estate auction events across Georgia. Covers estate sales, auto auctions, and specialty auctions with photos and details.</p>
+        <span class="source-tag" style="background:#b4530922;color:#f59e0b;border:1px solid #b4530944">Auctioneers</span>
+        <span class="source-tag" style="background:#b4530922;color:#f59e0b;border:1px solid #b4530944">Estate auctions</span>
+        <div class="source-links">
+          <a href="https://www.auctionzip.com/ga.html" target="_blank" rel="noopener" class="source-link primary">Georgia Auctions &#x2197;</a>
         </div>
       </div>
 
@@ -523,14 +709,71 @@
         </div>
       </div>
 
-      <!-- GarageSaleFinder -->
+      <!-- Yard Sale Search -->
       <div class="source-card">
         <div class="source-card-accent" style="background:linear-gradient(90deg,#0891b2,#22d3ee)"></div>
-        <h3><span style="color:#22d3ee">&#x25CF;</span> GarageSaleFinder</h3>
-        <p class="source-desc">Large network of garage and estate sale listings. Claims to be the largest network of sale listing websites. Includes map search.</p>
-        <span class="source-tag" style="background:#0891b222;color:#22d3ee;border:1px solid #0891b244">Large network</span>
+        <h3><span style="color:#22d3ee">&#x25CF;</span> Yard Sale Search</h3>
+        <p class="source-desc">Map-based garage sale and estate sale finder. Free to search and post. Good for finding neighborhood sales and estate sales across metro Atlanta.</p>
+        <span class="source-tag" style="background:#0891b222;color:#22d3ee;border:1px solid #0891b244">Map view</span>
+        <span class="source-tag" style="background:#0891b222;color:#22d3ee;border:1px solid #0891b244">Free listings</span>
         <div class="source-links">
-          <a href="https://www.garagesalefinder.com/yard-sales/atlanta-ga/" target="_blank" rel="noopener" class="source-link primary">Search Atlanta &#x2197;</a>
+          <a href="https://www.yardsalesearch.com/garage-sales-atlanta-ga.html" target="_blank" rel="noopener" class="source-link primary">Search Atlanta &#x2197;</a>
+          <a href="https://www.yardsalesearch.com/garage-sales-georgia.html" target="_blank" rel="noopener" class="source-link">All Georgia &#x2197;</a>
+        </div>
+        <div class="city-links">
+          <a href="https://www.yardsalesearch.com/garage-sales-marietta-ga.html" target="_blank" rel="noopener" class="city-link">Marietta</a>
+          <a href="https://www.yardsalesearch.com/garage-sales-lawrenceville-ga.html" target="_blank" rel="noopener" class="city-link">Lawrenceville</a>
+        </div>
+      </div>
+
+      <!-- AuctionNinja -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#dc2626,#f87171)"></div>
+        <h3><span style="color:#f87171">&#x25CF;</span> AuctionNinja</h3>
+        <p class="source-desc">Online estate sale auctions with bids starting at $1. Shop furniture, jewelry, antiques, art, coins, and collectibles. 4.6 stars on Trustpilot.</p>
+        <span class="source-tag" style="background:#dc262622;color:#f87171;border:1px solid #dc262644">Bids from $1</span>
+        <span class="source-tag" style="background:#dc262622;color:#f87171;border:1px solid #dc262644">Online bidding</span>
+        <div class="source-links">
+          <a href="https://www.auctionninja.com/estate-sales/results?location=Atlanta%2C+GA" target="_blank" rel="noopener" class="source-link primary">Atlanta Sales &#x2197;</a>
+          <a href="https://www.auctionninja.com/" target="_blank" rel="noopener" class="source-link">Browse All &#x2197;</a>
+        </div>
+      </div>
+
+      <!-- YardSales.net -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#059669,#34d399)"></div>
+        <h3><span style="color:#34d399">&#x25CF;</span> YardSales.net</h3>
+        <p class="source-desc">Fast-growing yard and estate sale site. Weekly listings with good descriptions. Covers Grant Park, Buckhead, East Point, Conyers, and more.</p>
+        <span class="source-tag" style="background:#05966922;color:#34d399;border:1px solid #05966944">Weekly updates</span>
+        <span class="source-tag" style="background:#05966922;color:#34d399;border:1px solid #05966944">Descriptions</span>
+        <div class="source-links">
+          <a href="https://yardsales.net/atlanta-ga/" target="_blank" rel="noopener" class="source-link primary">Search Atlanta &#x2197;</a>
+          <a href="https://yardsales.net/" target="_blank" rel="noopener" class="source-link">Browse All &#x2197;</a>
+        </div>
+      </div>
+
+      <!-- Facebook -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#1d4ed8,#3b82f6)"></div>
+        <h3><span style="color:#3b82f6">&#x25CF;</span> Facebook Groups</h3>
+        <p class="source-desc">Many Atlanta estate sale companies post upcoming sales on Facebook first, often with photos of rare items before they hit the listing sites. Great for early tips.</p>
+        <span class="source-tag" style="background:#1d4ed822;color:#3b82f6;border:1px solid #1d4ed844">Early access</span>
+        <span class="source-tag" style="background:#1d4ed822;color:#3b82f6;border:1px solid #1d4ed844">Community</span>
+        <div class="source-links">
+          <a href="https://www.facebook.com/search/groups/?q=atlanta%20estate%20sales" target="_blank" rel="noopener" class="source-link primary">Find Groups &#x2197;</a>
+          <a href="https://www.facebook.com/marketplace/atlanta/search?query=estate%20sale" target="_blank" rel="noopener" class="source-link">Marketplace &#x2197;</a>
+        </div>
+      </div>
+
+      <!-- Nextdoor -->
+      <div class="source-card">
+        <div class="source-card-accent" style="background:linear-gradient(90deg,#65a30d,#a3e635)"></div>
+        <h3><span style="color:#a3e635">&#x25CF;</span> Nextdoor</h3>
+        <p class="source-desc">Neighborhood-level estate sale listings. Smaller sales that don't get listed on the big sites often show up here first. Requires a free account.</p>
+        <span class="source-tag" style="background:#65a30d22;color:#a3e635;border:1px solid #65a30d44">Neighborhood</span>
+        <span class="source-tag" style="background:#65a30d22;color:#a3e635;border:1px solid #65a30d44">Hidden finds</span>
+        <div class="source-links">
+          <a href="https://nextdoor.com/for_sale_and_free/?query=estate%20sale" target="_blank" rel="noopener" class="source-link primary">Search Sales &#x2197;</a>
         </div>
       </div>
 
@@ -589,10 +832,240 @@
 
   // ── State ──
   let mySales = [];
+  let feedItems = [];
+  let feedFilter = 'all';
   let map, markers = [];
 
   const DAY_COLORS = { 'Thursday': '#facc15', 'Friday': '#fb923c', 'Saturday': '#6c8cff', 'Sunday': '#4ade80' };
   const DAY_SHORT = { 'Thursday': 'thu', 'Friday': 'fri', 'Saturday': 'sat', 'Sunday': 'sun' };
+
+  // ══════════════════════════
+  //  FEED LOGIC
+  // ══════════════════════════
+
+  // RSS-to-JSON proxy (free, CORS-friendly)
+  const RSS_PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
+
+  // Craigslist RSS feeds for Atlanta estate/garage sales
+  const CL_FEEDS = [
+    { url: 'https://atlanta.craigslist.org/search/gms?format=rss&query=estate+sale', label: 'CL: Estate Sales' },
+    { url: 'https://atlanta.craigslist.org/search/gms?format=rss&query=moving+sale', label: 'CL: Moving Sales' },
+    { url: 'https://atlanta.craigslist.org/search/gms?format=rss&query=downsizing', label: 'CL: Downsizing' },
+    { url: 'https://atlanta.craigslist.org/search/gms?format=rss&query=antique+sale', label: 'CL: Antique Sales' },
+  ];
+
+  async function fetchFeed(feedUrl) {
+    try {
+      const resp = await fetch(RSS_PROXY + encodeURIComponent(feedUrl));
+      const data = await resp.json();
+      if (data.status === 'ok' && data.items) {
+        return data.items.map(item => ({
+          title: item.title || 'Untitled',
+          description: stripHtml(item.description || item.content || ''),
+          url: item.link || '',
+          date: item.pubDate || '',
+          source: 'craigslist',
+          thumbnail: item.thumbnail || item.enclosure?.link || ''
+        }));
+      }
+    } catch(e) { console.log('Feed fetch failed:', feedUrl, e); }
+    return [];
+  }
+
+  async function fetchScrapedData() {
+    try {
+      const resp = await fetch('data/sales.json');
+      const data = await resp.json();
+      if (data.sales && data.sales.length > 0) {
+        return data.sales.map(s => ({
+          title: s.title || 'Estate Sale',
+          description: s.description || '',
+          url: s.url || '',
+          date: s.dates?.[0]?.date || '',
+          source: 'scraped',
+          address: s.address,
+          city: s.city,
+          zip: s.zip,
+          day: s.dates?.[0]?.day,
+          time: s.dates?.map(d => d.day + ' ' + d.start + '–' + d.end).join(', '),
+          company: s.company,
+          categories: s.categories || [],
+          photos: s.photos
+        }));
+      }
+    } catch(e) { /* no scraped data, that's fine */ }
+    return [];
+  }
+
+  async function loadFeed() {
+    const loading = document.getElementById('feedLoading');
+    if (loading) loading.style.display = 'block';
+
+    feedItems = [];
+
+    try {
+      // Fetch all Craigslist RSS feeds in parallel
+      const clResults = await Promise.all(CL_FEEDS.map(f => fetchFeed(f.url)));
+      clResults.forEach(items => feedItems.push(...items));
+
+      // Fetch any scraped data (works on GitHub Pages, skipped on local file://)
+      const scraped = await fetchScrapedData();
+      feedItems.push(...scraped);
+
+      // Deduplicate by title similarity
+      const seen = new Set();
+      feedItems = feedItems.filter(item => {
+        const key = item.title.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 40);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      // Sort by date (newest first)
+      feedItems.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    } catch(e) {
+      console.log('Feed loading error:', e);
+    }
+
+    if (loading) loading.style.display = 'none';
+    renderFeed();
+  }
+
+  window.refreshFeed = function() {
+    const btn = document.getElementById('refreshBtn');
+    btn.textContent = '↻ Loading...';
+    btn.disabled = true;
+    loadFeed().then(() => {
+      btn.textContent = '↻ Refresh';
+      btn.disabled = false;
+    });
+  };
+
+  window.setFeedFilter = function(filter, el) {
+    feedFilter = filter;
+    document.querySelectorAll('.feed-filter').forEach(f => f.classList.remove('active'));
+    el.classList.add('active');
+    renderFeed();
+  };
+
+  function renderFeed() {
+    const container = document.getElementById('feedList');
+    let filtered = feedItems;
+
+    if (feedFilter !== 'all') {
+      filtered = feedItems.filter(item => {
+        const text = (item.title + ' ' + item.description + ' ' + (item.categories || []).join(' ')).toLowerCase();
+        return text.includes(feedFilter.toLowerCase());
+      });
+    }
+
+    if (filtered.length === 0) {
+      const isLocal = window.location.protocol === 'file:';
+      const noDataMsg = isLocal
+        ? 'Live feeds require the site to be hosted online. Push to GitHub Pages to see live listings here!'
+        : 'Could not load live feeds. The RSS proxy may be temporarily unavailable.';
+      container.innerHTML = `<div class="feed-error">
+        <h3 style="color:var(--text);margin-bottom:8px;">${feedItems.length === 0 ? 'No live listings yet' : 'No matches'}</h3>
+        <p>${feedItems.length === 0 ? noDataMsg : 'No matches for this filter. Try "All" to see everything.'}</p>
+        <p style="margin-top:12px;">
+          <a href="https://atlanta.craigslist.org/search/gms?query=estate+sale" target="_blank">Browse Craigslist directly &rarr;</a>
+          &nbsp;&nbsp;or&nbsp;&nbsp;
+          <a href="javascript:void(0)" onclick="switchTab('browse');" style="color:var(--accent);cursor:pointer;">Browse all sources &rarr;</a>
+        </p>
+      </div>`;
+      return;
+    }
+
+    let html = `<p style="color:var(--text-dim);font-size:0.78rem;margin-bottom:8px;">${filtered.length} listing${filtered.length !== 1 ? 's' : ''} found</p>`;
+
+    filtered.forEach(item => {
+      const timeAgo = getTimeAgo(item.date);
+      const sourceClass = item.source === 'craigslist' ? 'craigslist' : 'scraped';
+      const sourceLabel = item.source === 'craigslist' ? 'Craigslist' : 'EstateSales';
+      const desc = item.description?.slice(0, 300) || '';
+
+      html += `
+        <div class="feed-item">
+          <div class="feed-item-header">
+            <div class="feed-item-title"><a href="${esc(item.url)}" target="_blank" rel="noopener">${esc(item.title)}</a></div>
+            <span class="feed-source-tag ${sourceClass}">${sourceLabel}</span>
+          </div>
+          <div class="feed-item-meta">
+            ${timeAgo ? `<span>&#x1f4c5; ${timeAgo}</span>` : ''}
+            ${item.address ? `<span>&#x1f4cd; ${esc(item.address)}, ${esc(item.city || '')}</span>` : ''}
+            ${item.time ? `<span>&#x1f552; ${esc(item.time)}</span>` : ''}
+            ${item.photos ? `<span>&#x1f4f7; ${item.photos} photos</span>` : ''}
+          </div>
+          ${desc ? `<div class="feed-item-desc">${esc(desc)}</div>` : ''}
+          <div class="feed-item-actions">
+            <a href="${esc(item.url)}" target="_blank" rel="noopener" class="feed-save-btn">View listing &#x2197;</a>
+            <button class="feed-save-btn" onclick="saveFeedItem(this, ${feedItems.indexOf(item)})">&#x2795; Save to My List</button>
+          </div>
+        </div>`;
+    });
+
+    container.innerHTML = html;
+  }
+
+  window.saveFeedItem = function(btn, index) {
+    const item = feedItems[index];
+    if (!item) return;
+
+    // Switch to my-sales tab and pre-fill the form
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-my-sales').classList.add('active');
+    document.querySelectorAll('.nav-tab')[2].classList.add('active');
+
+    setTimeout(() => {
+      if (map) map.invalidateSize();
+      else initMap();
+
+      document.getElementById('addTitle').value = item.title || '';
+      document.getElementById('addAddress').value = item.address || '';
+      document.getElementById('addCity').value = item.city || '';
+      document.getElementById('addZip').value = item.zip || '';
+      document.getElementById('addUrl').value = item.url || '';
+      document.getElementById('addNotes').value = item.description?.slice(0, 200) || '';
+
+      if (item.day) {
+        const daySelect = document.getElementById('addDay');
+        for (let i = 0; i < daySelect.options.length; i++) {
+          if (daySelect.options[i].text === item.day) { daySelect.selectedIndex = i; break; }
+        }
+      }
+      if (item.time) document.getElementById('addTime').value = item.time;
+
+      document.getElementById('addTitle').focus();
+      renderSavedSales();
+      updateMapMarkers();
+    }, 50);
+
+    btn.textContent = '✓ Copied to form';
+    btn.classList.add('saved');
+  };
+
+  function stripHtml(html) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  }
+
+  function getTimeAgo(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now - date;
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    if (days > 0) return days === 1 ? '1 day ago' : days + ' days ago';
+    if (hours > 0) return hours === 1 ? '1 hour ago' : hours + ' hours ago';
+    return 'Just now';
+  }
+
+  // ══════════════════════════
+  //  MY SALES LOGIC
+  // ══════════════════════════
 
   // ── LocalStorage ──
   function loadSales() {
@@ -612,11 +1085,15 @@
   }
 
   // ── Tab Switching ──
-  window.switchTab = function(tab) {
+  window.switchTab = function(tab, el) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('active');
-    event.target.classList.add('active');
+    // Highlight the correct nav button
+    const tabs = document.querySelectorAll('.nav-tab');
+    const tabMap = { feed: 0, browse: 1, 'my-sales': 2 };
+    if (el) el.classList.add('active');
+    else if (tabMap[tab] !== undefined) tabs[tabMap[tab]].classList.add('active');
     if (tab === 'my-sales') {
       setTimeout(() => {
         if (map) map.invalidateSize();
@@ -624,6 +1101,9 @@
         renderSavedSales();
         updateMapMarkers();
       }, 50);
+    }
+    if (tab === 'feed' && feedItems.length === 0) {
+      loadFeed();
     }
   };
 
@@ -809,6 +1289,7 @@
 
   // ── Init ──
   loadSales();
+  loadFeed();  // Feed is the default active tab
 })();
 </script>
 </body>
