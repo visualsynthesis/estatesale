@@ -1066,11 +1066,7 @@
       const clResults = await Promise.all(CL_FEEDS.map(f => fetchFeed(f.url)));
       clResults.forEach(items => feedItems.push(...items));
 
-      // Only fall back to sample data if no live feed items came through
-      if (feedItems.length === 0) {
-        const scraped = await fetchScrapedData();
-        feedItems.push(...scraped);
-      }
+      // Sample data fallback removed — feed shows only real listings
 
       // Deduplicate by title similarity
       const seen = new Set();
