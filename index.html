@@ -848,10 +848,12 @@
 
   // Craigslist RSS feeds for Atlanta estate/garage sales
   const CL_FEEDS = [
-    { url: 'https://atlanta.craigslist.org/search/gms?format=rss&query=estate+sale', label: 'CL: Estate Sales' },
-    { url: 'https://atlanta.craigslist.org/search/gms?format=rss&query=moving+sale', label: 'CL: Moving Sales' },
-    { url: 'https://atlanta.craigslist.org/search/gms?format=rss&query=downsizing', label: 'CL: Downsizing' },
-    { url: 'https://atlanta.craigslist.org/search/gms?format=rss&query=antique+sale', label: 'CL: Antique Sales' },
+    { url: 'https://atlanta.craigslist.org/search/sss?format=rss&query=estate+sale', label: 'CL: Estate Sales' },
+    { url: 'https://atlanta.craigslist.org/search/sss?format=rss&query=moving+sale', label: 'CL: Moving Sales' },
+    { url: 'https://atlanta.craigslist.org/search/sss?format=rss&query=downsizing', label: 'CL: Downsizing' },
+    { url: 'https://atlanta.craigslist.org/search/sss?format=rss&query=antique+sale', label: 'CL: Antique Sales' },
+    { url: 'https://atlanta.craigslist.org/search/sss?format=rss&query=garage+sale', label: 'CL: Garage Sales' },
+    { url: 'https://atlanta.craigslist.org/search/gms?format=rss', label: 'CL: Garage & Moving' },
   ];
 
   async function fetchFeed(feedUrl) {
@@ -908,9 +910,11 @@
       const clResults = await Promise.all(CL_FEEDS.map(f => fetchFeed(f.url)));
       clResults.forEach(items => feedItems.push(...items));
 
-      // Fetch any scraped data (works on GitHub Pages, skipped on local file://)
-      const scraped = await fetchScrapedData();
-      feedItems.push(...scraped);
+      // Only fall back to sample data if no live feed items came through
+      if (feedItems.length === 0) {
+        const scraped = await fetchScrapedData();
+        feedItems.push(...scraped);
+      }
 
       // Deduplicate by title similarity
       const seen = new Set();
