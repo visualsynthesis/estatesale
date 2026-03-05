@@ -1,0 +1,238 @@
+{
+  "last_updated": "2026-02-21T08:00:00Z",
+  "sales": [
+    {
+      "id": "esnet-40125",
+      "source": "estatesales.net",
+      "title": "Buckhead Luxury Estate Sale",
+      "company": "Peachtree Battle Estate Sales",
+      "address": "3250 Habersham Rd NW",
+      "city": "Atlanta",
+      "zip": "30305",
+      "lat": 33.8540,
+      "lng": -84.3780,
+      "dates": [
+        {"day": "Thursday", "date": "2026-02-26", "start": "9:00 AM", "end": "4:00 PM"},
+        {"day": "Friday", "date": "2026-02-27", "start": "9:00 AM", "end": "4:00 PM"},
+        {"day": "Saturday", "date": "2026-02-28", "start": "9:00 AM", "end": "2:00 PM"}
+      ],
+      "description": "Stunning Buckhead estate featuring fine antiques, oil paintings, Henredon and Baker furniture, sterling silver flatware, Waterford crystal, vintage jewelry, oriental rugs, and a fully equipped gourmet kitchen.",
+      "categories": ["furniture", "antiques", "jewelry", "art", "kitchenware"],
+      "photos": 87,
+      "url": "https://www.estatesales.net/GA/Atlanta/30305/40125"
+    },
+    {
+      "id": "esnet-40130",
+      "source": "estatesales.net",
+      "title": "Decatur Mid-Century Modern Sale",
+      "company": "Bees Knees Estate Sales",
+      "address": "415 W Ponce de Leon Ave",
+      "city": "Decatur",
+      "zip": "30030",
+      "lat": 33.7748,
+      "lng": -84.2963,
+      "dates": [
+        {"day": "Friday", "date": "2026-02-27", "start": "10:00 AM", "end": "5:00 PM"},
+        {"day": "Saturday", "date": "2026-02-28", "start": "10:00 AM", "end": "4:00 PM"},
+        {"day": "Sunday", "date": "2026-03-01", "start": "11:00 AM", "end": "3:00 PM"}
+      ],
+      "description": "Amazing mid-century modern collection! Herman Miller chairs, Eames pieces, vintage electronics, vinyl records, MCM lamps and art, teak furniture, retro barware, and a garage full of tools.",
+      "categories": ["furniture", "electronics", "tools", "collectibles", "art"],
+      "photos": 134,
+      "url": "https://www.estatesales.net/GA/Decatur/30030/40130"
+    },
+    {
+      "id": "esorg-7821",
+      "source": "estatesales.org",
+      "title": "Roswell Whole-House Liquidation",
+      "company": "Southern Comfort Estate Sales",
+      "address": "890 Mimosa Blvd",
+      "city": "Roswell",
+      "zip": "30075",
+      "lat": 34.0234,
+      "lng": -84.3616,
+      "dates": [
+        {"day": "Friday", "date": "2026-02-27", "start": "8:00 AM", "end": "3:00 PM"},
+        {"day": "Saturday", "date": "2026-02-28", "start": "8:00 AM", "end": "2:00 PM"}
+      ],
+      "description": "Entire contents of a 4-bedroom home must go! Bedroom sets, living room furniture, dining table with 8 chairs, patio furniture, lawnmower, power tools, holiday decorations, books, and clothing.",
+      "categories": ["furniture", "tools", "outdoor", "clothing", "books"],
+      "photos": 56,
+      "url": "https://estatesales.org/estate-sales/ga/roswell/7821"
+    },
+    {
+      "id": "esnet-40145",
+      "source": "estatesales.net",
+      "title": "Sandy Springs Downsizing Sale",
+      "company": "Certified Estate Sales",
+      "address": "6100 Lake Forrest Dr NW",
+      "city": "Sandy Springs",
+      "zip": "30328",
+      "lat": 33.9304,
+      "lng": -84.3569,
+      "dates": [
+        {"day": "Saturday", "date": "2026-02-28", "start": "9:00 AM", "end": "4:00 PM"},
+        {"day": "Sunday", "date": "2026-03-01", "start": "10:00 AM", "end": "3:00 PM"}
+      ],
+      "description": "Downsizing from a large home. Quality traditional furniture, china, crystal, silver, linens, lamps, artwork, books, kitchen items, and a woodworking shop with Craftsman tools.",
+      "categories": ["furniture", "kitchenware", "tools", "art", "collectibles"],
+      "photos": 42,
+      "url": "https://www.estatesales.net/GA/Sandy-Springs/30328/40145"
+    },
+    {
+      "id": "gsalr-atl-991",
+      "source": "gsalr.com",
+      "title": "Marietta Antique & Collectibles Sale",
+      "company": "Treasure Hunters Estate Sales",
+      "address": "225 Roswell St SE",
+      "city": "Marietta",
+      "zip": "30060",
+      "lat": 33.9526,
+      "lng": -84.5499,
+      "dates": [
+        {"day": "Thursday", "date": "2026-02-26", "start": "8:00 AM", "end": "5:00 PM"},
+        {"day": "Friday", "date": "2026-02-27", "start": "8:00 AM", "end": "5:00 PM"},
+        {"day": "Saturday", "date": "2026-02-28", "start": "8:00 AM", "end": "3:00 PM"}
+      ],
+      "description": "Packed house! Antique bottles, vintage toys, model trains, old coins, Civil War memorabilia, cast iron cookware, quilts, glass insulators, and boxes of ephemera still being discovered.",
+      "categories": ["antiques", "collectibles", "kitchenware", "toys"],
+      "photos": 29,
+      "url": "https://gsalr.com/garage-sales-marietta-ga/991"
+    },
+    {
+      "id": "esnet-40152",
+      "source": "estatesales.net",
+      "title": "Alpharetta Designer Home Sale",
+      "company": "Atlanta Estate Sales & Liquidations",
+      "address": "1020 Providence Oaks Ln",
+      "city": "Alpharetta",
+      "zip": "30009",
+      "lat": 34.0754,
+      "lng": -84.2941,
+      "dates": [
+        {"day": "Friday", "date": "2026-02-27", "start": "9:00 AM", "end": "4:00 PM"},
+        {"day": "Saturday", "date": "2026-02-28", "start": "9:00 AM", "end": "3:00 PM"}
+      ],
+      "description": "Beautifully decorated home with Restoration Hardware and Pottery Barn furnishings, designer clothing and handbags, high-end kitchen appliances, wine collection, exercise equipment, and a three-car garage full of sporting goods.",
+      "categories": ["furniture", "clothing", "kitchenware", "sports", "electronics"],
+      "photos": 112,
+      "url": "https://www.estatesales.net/GA/Alpharetta/30009/40152"
+    },
+    {
+      "id": "cl-atl-88432",
+      "source": "craigslist",
+      "title": "Massive Estate Sale - Everything Must Go!",
+      "company": "",
+      "address": "742 Moreland Ave SE",
+      "city": "Atlanta",
+      "zip": "30316",
+      "lat": 33.7340,
+      "lng": -84.3483,
+      "dates": [
+        {"day": "Saturday", "date": "2026-02-28", "start": "7:00 AM", "end": "4:00 PM"},
+        {"day": "Sunday", "date": "2026-03-01", "start": "8:00 AM", "end": "2:00 PM"}
+      ],
+      "description": "40 years of accumulated treasures! Vintage furniture, records, books, tools, garden supplies, kitchen everything, and way too much to list. Come see for yourself.",
+      "categories": ["furniture", "tools", "books", "outdoor", "kitchenware"],
+      "photos": 8,
+      "url": "https://atlanta.craigslist.org/atl/gms/d/massive-estate-sale/88432.html"
+    },
+    {
+      "id": "escom-3344",
+      "source": "estatesale.com",
+      "title": "Kennesaw Historic Home Estate Sale",
+      "company": "Companies Estate Sales",
+      "address": "2815 Old Highway 41 NW",
+      "city": "Kennesaw",
+      "zip": "30144",
+      "lat": 34.0234,
+      "lng": -84.6155,
+      "dates": [
+        {"day": "Thursday", "date": "2026-02-26", "start": "10:00 AM", "end": "5:00 PM"},
+        {"day": "Friday", "date": "2026-02-27", "start": "10:00 AM", "end": "5:00 PM"},
+        {"day": "Saturday", "date": "2026-02-28", "start": "10:00 AM", "end": "3:00 PM"}
+      ],
+      "description": "Contents of a historic 1920s home. Depression glass, antique furniture, vintage clothing, sewing machines, old photographs, costume jewelry, vinyl records, and a barn full of farm equipment.",
+      "categories": ["antiques", "clothing", "jewelry", "collectibles", "tools"],
+      "photos": 67,
+      "url": "https://www.estatesale.com/sales/kennesaw-ga/3344"
+    },
+    {
+      "id": "esnet-40160",
+      "source": "estatesales.net",
+      "title": "East Atlanta Village Art Collector Sale",
+      "company": "Lott's Treasures",
+      "address": "560 Flat Shoals Ave SE",
+      "city": "Atlanta",
+      "zip": "30316",
+      "lat": 33.7401,
+      "lng": -84.3402,
+      "dates": [
+        {"day": "Friday", "date": "2026-02-27", "start": "10:00 AM", "end": "6:00 PM"},
+        {"day": "Saturday", "date": "2026-02-28", "start": "10:00 AM", "end": "4:00 PM"}
+      ],
+      "description": "Art collector's estate with original paintings, prints, sculptures, art books, pottery, and eclectic furniture. Also includes a workshop with woodworking and metalworking tools.",
+      "categories": ["art", "books", "furniture", "tools", "collectibles"],
+      "photos": 93,
+      "url": "https://www.estatesales.net/GA/Atlanta/30316/40160"
+    },
+    {
+      "id": "esorg-7830",
+      "source": "estatesales.org",
+      "title": "Dunwoody Estate - Final Weekend",
+      "company": "Peachtree Battle Estate Sales",
+      "address": "4720 Vermack Rd",
+      "city": "Dunwoody",
+      "zip": "30338",
+      "lat": 33.9343,
+      "lng": -84.3187,
+      "dates": [
+        {"day": "Saturday", "date": "2026-02-28", "start": "9:00 AM", "end": "3:00 PM"},
+        {"day": "Sunday", "date": "2026-03-01", "start": "10:00 AM", "end": "2:00 PM"}
+      ],
+      "description": "Final weekend - 50% off everything! Bedroom furniture, dining sets, patio furniture, tools, holiday decor, electronics, small appliances, and more.",
+      "categories": ["furniture", "electronics", "tools", "outdoor"],
+      "photos": 38,
+      "url": "https://estatesales.org/estate-sales/ga/dunwoody/7830"
+    },
+    {
+      "id": "gsalr-atl-995",
+      "source": "gsalr.com",
+      "title": "Smyrna Moving & Estate Sale",
+      "company": "",
+      "address": "3105 King Springs Rd SE",
+      "city": "Smyrna",
+      "zip": "30080",
+      "lat": 33.8635,
+      "lng": -84.5143,
+      "dates": [
+        {"day": "Friday", "date": "2026-02-27", "start": "9:00 AM", "end": "3:00 PM"},
+        {"day": "Saturday", "date": "2026-02-28", "start": "9:00 AM", "end": "1:00 PM"}
+      ],
+      "description": "Moving after 30 years! Furniture, appliances, lawn equipment, hand tools, fishing gear, camping equipment, and general household items.",
+      "categories": ["furniture", "tools", "outdoor", "sports", "electronics"],
+      "photos": 15,
+      "url": "https://gsalr.com/garage-sales-smyrna-ga/995"
+    },
+    {
+      "id": "esnet-40168",
+      "source": "estatesales.net",
+      "title": "Tucker Collector's Paradise",
+      "company": "Bulldog Estate Sales",
+      "address": "1850 Lavista Rd",
+      "city": "Tucker",
+      "zip": "30084",
+      "lat": 33.8457,
+      "lng": -84.2171,
+      "dates": [
+        {"day": "Thursday", "date": "2026-02-26", "start": "9:00 AM", "end": "4:00 PM"},
+        {"day": "Friday", "date": "2026-02-27", "start": "9:00 AM", "end": "4:00 PM"},
+        {"day": "Saturday", "date": "2026-02-28", "start": "9:00 AM", "end": "2:00 PM"}
+      ],
+      "description": "Collector's dream! Sports memorabilia, signed baseballs, vintage Coca-Cola items, neon signs, beer steins, model cars, coins, stamps, and military uniforms.",
+      "categories": ["collectibles", "antiques", "sports"],
+      "photos": 201,
+      "url": "https://www.estatesales.net/GA/Tucker/30084/40168"
+    }
+  ]
+}

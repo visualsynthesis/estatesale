@@ -994,10 +994,14 @@
   //  FEED LOGIC
   // ══════════════════════════
 
-  // CORS proxy for fetching RSS feeds client-side
-  const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+  // CORS proxies — try multiple in order since free services go down frequently
+  const CORS_PROXIES = [
+    url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+    url => 'https://corsproxy.io/?' + encodeURIComponent(url),
+    url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
+  ];
 
-  // Open RSS feeds generated from Craigslist Atlanta search pages
+  // Open RSS feeds generated from Craigslist Atlanta search pages (live fallback)
   const CL_FEEDS = [
     { url: 'https://openrss.org/atlanta.craigslist.org/search/sss?query=estate+sale', label: 'Estate Sales', category: 'estate sale' },
     { url: 'https://openrss.org/atlanta.craigslist.org/search/sss?query=moving+sale', label: 'Moving Sales', category: 'moving' },
@@ -1021,19 +1025,61 @@
     } catch(e) { return []; }
   }
 
+  // Try fetching a URL through multiple CORS proxies
+  async function fetchWithProxy(url) {
+    for (const makeProxyUrl of CORS_PROXIES) {
+      try {
+        const resp = await fetch(makeProxyUrl(url), { signal: AbortSignal.timeout(8000) });
+        if (!resp.ok) continue;
+        return await resp.text();
+      } catch(e) {
+        continue;
+      }
+    }
+    return null;
+  }
+
   async function fetchFeed(feed) {
     try {
-      const resp = await fetch(CORS_PROXY + encodeURIComponent(feed.url));
-      if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      const text = await resp.text();
+      const text = await fetchWithProxy(feed.url);
+      if (!text) return [];
       const items = parseRSS(text);
-      // Tag each item with the feed category
       items.forEach(item => item.category = feed.category);
       return items;
     } catch(e) {
       console.log('Feed fetch failed:', feed.label, e);
     }
     return [];
+  }
+
+  // Load scraped feed data from the static JSON file (primary source)
+  async function loadScrapedFeed() {
+    try {
+      const resp = await fetch('data/craigslist-feed.json');
+      if (!resp.ok) return [];
+      const data = await resp.json();
+      return (data.items || []).map(item => ({
+        ...item,
+        source: item.source || 'craigslist'
+      }));
+    } catch(e) {
+      console.log('Scraped feed load failed:', e);
+      return [];
+    }
+  }
+
+  // Try loading live RSS feeds (bonus — may fail if third-party services are down)
+  async function loadLiveFeeds() {
+    if (window.location.protocol === 'file:') return [];
+    try {
+      const results = await Promise.all(CL_FEEDS.map(f => fetchFeed(f)));
+      const items = [];
+      results.forEach(r => items.push(...r));
+      return items;
+    } catch(e) {
+      console.log('Live feed fetch failed:', e);
+      return [];
+    }
   }
 
   async function loadFeed() {
@@ -1043,13 +1089,15 @@
     feedItems = [];
 
     try {
-      // Fetch all RSS feeds in parallel via CORS proxy
-      const results = await Promise.all(CL_FEEDS.map(f => fetchFeed(f)));
-      results.forEach(items => feedItems.push(...items));
+      // Load both sources in parallel: scraped JSON (reliable) + live RSS (bonus)
+      const [scraped, live] = await Promise.all([loadScrapedFeed(), loadLiveFeeds()]);
+
+      // Merge: live items first (fresher), then scraped
+      const merged = [...live, ...scraped];
 
       // Deduplicate by title similarity
       const seen = new Set();
-      feedItems = feedItems.filter(item => {
+      feedItems = merged.filter(item => {
         const key = item.title.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 40);
         if (seen.has(key)) return false;
         seen.add(key);
@@ -1097,8 +1145,8 @@
     if (filtered.length === 0) {
       const isLocal = window.location.protocol === 'file:';
       const noDataMsg = isLocal
-        ? 'Live feeds require the site to be hosted online. Push to GitHub Pages to see live listings here!'
-        : 'Could not load live feeds. The RSS proxy may be temporarily unavailable.';
+        ? 'Feed data loads from the hosted site. Push to GitHub Pages to see listings here!'
+        : 'No feed data available yet. Run the scraper or wait for the next scheduled update.';
       container.innerHTML = `<div class="feed-error">
         <h3 style="color:var(--text);margin-bottom:8px;">${feedItems.length === 0 ? 'No live listings yet' : 'No matches'}</h3>
         <p>${feedItems.length === 0 ? noDataMsg : 'No matches for this filter. Try "All" to see everything.'}</p>
