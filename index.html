@@ -994,59 +994,45 @@
   //  FEED LOGIC
   // ══════════════════════════
 
-  // RSS-to-JSON proxy (free, CORS-friendly)
-  const RSS_PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
+  // CORS proxy for fetching RSS feeds client-side
+  const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
 
-  // Craigslist RSS feeds for Atlanta estate/garage sales
+  // Open RSS feeds generated from Craigslist Atlanta search pages
   const CL_FEEDS = [
-    { url: 'https://atlanta.craigslist.org/search/sss?format=rss&query=estate+sale', label: 'CL: Estate Sales' },
-    { url: 'https://atlanta.craigslist.org/search/sss?format=rss&query=moving+sale', label: 'CL: Moving Sales' },
-    { url: 'https://atlanta.craigslist.org/search/sss?format=rss&query=downsizing', label: 'CL: Downsizing' },
-    { url: 'https://atlanta.craigslist.org/search/sss?format=rss&query=antique+sale', label: 'CL: Antique Sales' },
-    { url: 'https://atlanta.craigslist.org/search/sss?format=rss&query=garage+sale', label: 'CL: Garage Sales' },
-    { url: 'https://atlanta.craigslist.org/search/gms?format=rss', label: 'CL: Garage & Moving' },
+    { url: 'https://openrss.org/atlanta.craigslist.org/search/sss?query=estate+sale', label: 'Estate Sales', category: 'estate sale' },
+    { url: 'https://openrss.org/atlanta.craigslist.org/search/sss?query=moving+sale', label: 'Moving Sales', category: 'moving' },
+    { url: 'https://openrss.org/atlanta.craigslist.org/search/sss?query=antique', label: 'Antiques', category: 'antique' },
+    { url: 'https://openrss.org/atlanta.craigslist.org/search/gms', label: 'Garage & Moving Sales', category: 'garage' },
   ];
 
-  async function fetchFeed(feedUrl) {
+  // Parse RSS XML into items
+  function parseRSS(xmlText) {
     try {
-      const resp = await fetch(RSS_PROXY + encodeURIComponent(feedUrl));
-      const data = await resp.json();
-      if (data.status === 'ok' && data.items) {
-        return data.items.map(item => ({
-          title: item.title || 'Untitled',
-          description: stripHtml(item.description || item.content || ''),
-          url: item.link || '',
-          date: item.pubDate || '',
-          source: 'craigslist',
-          thumbnail: item.thumbnail || item.enclosure?.link || ''
-        }));
-      }
-    } catch(e) { console.log('Feed fetch failed:', feedUrl, e); }
-    return [];
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(xmlText, 'text/xml');
+      const items = doc.querySelectorAll('item');
+      return Array.from(items).map(item => ({
+        title: item.querySelector('title')?.textContent || 'Untitled',
+        description: stripHtml(item.querySelector('description')?.textContent || ''),
+        url: item.querySelector('link')?.textContent || '',
+        date: item.querySelector('pubDate')?.textContent || '',
+        source: 'craigslist'
+      }));
+    } catch(e) { return []; }
   }
 
-  async function fetchScrapedData() {
+  async function fetchFeed(feed) {
     try {
-      const resp = await fetch('data/sales.json');
-      const data = await resp.json();
-      if (data.sales && data.sales.length > 0) {
-        return data.sales.map(s => ({
-          title: s.title || 'Estate Sale',
-          description: s.description || '',
-          url: s.url || '',
-          date: s.dates?.[0]?.date || '',
-          source: 'scraped',
-          address: s.address,
-          city: s.city,
-          zip: s.zip,
-          day: s.dates?.[0]?.day,
-          time: s.dates?.map(d => d.day + ' ' + d.start + '–' + d.end).join(', '),
-          company: s.company,
-          categories: s.categories || [],
-          photos: s.photos
-        }));
-      }
-    } catch(e) { /* no scraped data, that's fine */ }
+      const resp = await fetch(CORS_PROXY + encodeURIComponent(feed.url));
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const text = await resp.text();
+      const items = parseRSS(text);
+      // Tag each item with the feed category
+      items.forEach(item => item.category = feed.category);
+      return items;
+    } catch(e) {
+      console.log('Feed fetch failed:', feed.label, e);
+    }
     return [];
   }
 
@@ -1057,11 +1043,9 @@
     feedItems = [];
 
     try {
-      // Fetch all Craigslist RSS feeds in parallel
-      const clResults = await Promise.all(CL_FEEDS.map(f => fetchFeed(f.url)));
-      clResults.forEach(items => feedItems.push(...items));
-
-      // Sample data fallback removed — feed shows only real listings
+      // Fetch all RSS feeds in parallel via CORS proxy
+      const results = await Promise.all(CL_FEEDS.map(f => fetchFeed(f)));
+      results.forEach(items => feedItems.push(...items));
 
       // Deduplicate by title similarity
       const seen = new Set();
